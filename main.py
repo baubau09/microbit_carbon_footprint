@@ -1,9 +1,17 @@
 steps = 0
 test = 0
-tree_record = 0
+my_tree_record = 0
 STEP_PER_KM = 1390
 CO2_PER_KM = 0.083
 CO2_PER_TREE = 21
+CHALL_1 = 1
+CHALL_2 = 2
+CHALL_3 = 3
+CHALL_4 = 4
+CHALL_5 = 5
+CHALL_6 = 10
+CHALL_7 = 50
+CHALL_8 = 100
 days: List[number] = []
 navigation: List[string] = [
     'Press Logo to save your record at the end of each day',
@@ -31,6 +39,7 @@ def on_logo_pressed():
 
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
+#functions for converting
 def convert_steps():
     global steps
 
@@ -43,7 +52,14 @@ def convert_steps_to_trees():
     km = steps / STEP_PER_KM
     return convert_km_to_trees(km)
 
+#mode 3
+def show_our_record(our_record):
+    show_record(our_record)
+
 def show_my_record():
+    show_record(my_tree_record)
+
+def show_record(record):
     music.start_melody(music.built_in_melody(Melodies.RINGTONE), MelodyOptions.ONCE)
     basic.show_leds("""
                 . . # . .
@@ -53,10 +69,55 @@ def show_my_record():
                 . . # . .
     """)
     basic.pause(1000)
-    basic.show_number(tree_record)
+    basic.show_number(record)
     basic.pause(2000)
     basic.clear_screen()
 
+#mode 4
+def on_logo_long_pressed():
+    radio.set_group(1)
+    radio.send_number(my_tree_record)
+    basic.show_leds("""
+                . . . . .
+                # # # # #
+                # # . # #
+                # . # . #
+                # # # # #
+    """)
+    basic.pause(2000)
+    basic.clear_screen()
+input.on_logo_event(TouchButtonEvent.LONG_PRESSED, on_logo_long_pressed)
 
+def on_received_number(receivedNumber):
+    our_record = receivedNumber + my_tree_record
+    show_our_record(our_record)
+radio.on_received_number(on_received_number)
 
-
+#mode 5
+def show_completed_challenge():
+    num_of_led = 5
+    music.start_melody(music.built_in_melody(Melodies.POWER_UP), MelodyOptions.ONCE)
+    if my_tree_record >= CHALL_1:
+        led.plot(2, 4)
+    if my_tree_record >= CHALL_2:
+        led.plot(1, 3)
+    if my_tree_record >= CHALL_3:
+        led.plot(2, 3)
+    if my_tree_record >= CHALL_4:
+        led.plot(3, 3)
+    if my_tree_record >= CHALL_5:
+        i = 0
+        while i < num_of_led:
+            led.plot(i, 2)
+            i += 1
+    if my_tree_record >= CHALL_6:
+        i = 0
+        while i < num_of_led:
+            led.plot(i, 1)
+            i += 1
+    if my_tree_record >= CHALL_7:
+        led.plot(1, 0)
+    if my_tree_record >= CHALL_8:
+        led.plot(3, 0)
+    basic.pause(3000)
+    basic.clear_screen()

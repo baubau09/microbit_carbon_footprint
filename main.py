@@ -1,4 +1,5 @@
 steps = 0
+test = 0
 days: List[number] = []
 navigation: List[string] = [
     'Press Logo to save your record at the end of each day',
@@ -25,3 +26,4 @@ input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
 def convert_steps():
     global steps
+

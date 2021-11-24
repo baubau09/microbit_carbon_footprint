@@ -8,8 +8,11 @@ navigation: List[string] = [
     'Press A and B together to show the record of me and my friends'
 ]
 
-for option in navigation:
-    basic.show_string(option)
+def on_forever():
+    global navigation
+    for option in navigation:
+        basic.show_string(option)
+basic.forever(on_forever)
 
 def on_gesture_shake():
     global steps

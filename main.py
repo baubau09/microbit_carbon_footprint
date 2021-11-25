@@ -1,4 +1,5 @@
 #Varibles
+radio.set_group(1)
 steps = 0
 test = 0
 my_tree_record = 0
@@ -115,25 +116,42 @@ def show_completed_challenge():
     music.start_melody(music.built_in_melody(Melodies.POWER_UP), MelodyOptions.ONCE)
     if my_tree_record >= CHALL_1:
         led.plot(2, 4)
+    pause(500)
     if my_tree_record >= CHALL_2:
         led.plot(1, 3)
+    pause(500)
     if my_tree_record >= CHALL_3:
         led.plot(2, 3)
+    pause(500)
     if my_tree_record >= CHALL_4:
         led.plot(3, 3)
+    pause(500)
     if my_tree_record >= CHALL_5:
         i = 0
         while i < num_of_led:
             led.plot(i, 2)
             i += 1
+    pause(500)
     if my_tree_record >= CHALL_6:
         i = 0
         while i < num_of_led:
             led.plot(i, 1)
             i += 1
+    pause(500)
     if my_tree_record >= CHALL_7:
         led.plot(1, 0)
+    pause(500)
     if my_tree_record >= CHALL_8:
         led.plot(3, 0)
-    basic.pause(3000)
+        pause(500)
+        soundExpression.spring.play_until_done()
+        congrats_completed_all_challenges()
+        congrats_completed_all_challenges()
+        congrats_completed_all_challenges()
     basic.clear_screen()
+
+def congrats_completed_all_challenges():
+    basic.show_icon(IconNames.HEART)
+    pause(100)
+    basic.clear_screen()
+    pause(100)

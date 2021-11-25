@@ -36,7 +36,28 @@ def on_logo_pressed():
 
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
-#functions for converting
+def on_pin_pressed_p0():
+    show_my_record()
+input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
+
+def on_pin_pressed_p1():
+    radio.set_group(1)
+    radio.send_number(my_tree_record)
+    basic.show_leds("""
+                . . . . .
+                # # # # #
+                # # . # #
+                # . # . #
+                # # # # #
+    """)
+    basic.pause(2000)
+    basic.clear_screen()
+input.on_pin_pressed(TouchPin.P1, on_pin_pressed_p1)
+
+def on_pin_pressed_p2():
+    show_completed_challenge()
+input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
+
 def convert_steps():
     global steps
 
@@ -49,7 +70,6 @@ def convert_steps_to_trees():
     km = steps / STEP_PER_KM
     return convert_km_to_trees(km)
 
-#mode 3
 def show_our_record(our_record):
     show_record(our_record)
 
@@ -70,27 +90,11 @@ def show_record(record):
     basic.pause(2000)
     basic.clear_screen()
 
-#mode 4
-def on_logo_long_pressed():
-    radio.set_group(1)
-    radio.send_number(my_tree_record)
-    basic.show_leds("""
-                . . . . .
-                # # # # #
-                # # . # #
-                # . # . #
-                # # # # #
-    """)
-    basic.pause(2000)
-    basic.clear_screen()
-input.on_logo_event(TouchButtonEvent.LONG_PRESSED, on_logo_long_pressed)
-
 def on_received_number(receivedNumber):
     our_record = receivedNumber + my_tree_record
     show_our_record(our_record)
 radio.on_received_number(on_received_number)
 
-#mode 5
 def show_completed_challenge():
     num_of_led = 5
     music.start_melody(music.built_in_melody(Melodies.POWER_UP), MelodyOptions.ONCE)

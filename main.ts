@@ -27,7 +27,25 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function on_logo_pressed() {
     days.push(steps)
     steps = 0
 })
-// functions for converting
+input.onPinPressed(TouchPin.P0, function on_pin_pressed_p0() {
+    show_my_record()
+})
+input.onPinPressed(TouchPin.P1, function on_pin_pressed_p1() {
+    radio.setGroup(1)
+    radio.sendNumber(my_tree_record)
+    basic.showLeds(`
+                . . . . .
+                # # # # #
+                # # . # #
+                # . # . #
+                # # # # #
+    `)
+    basic.pause(2000)
+    basic.clearScreen()
+})
+input.onPinPressed(TouchPin.P2, function on_pin_pressed_p2() {
+    show_completed_challenge()
+})
 function convert_steps() {
     
 }
@@ -43,7 +61,6 @@ function convert_steps_to_trees(): number {
     return convert_km_to_trees(km)
 }
 
-// mode 3
 function show_our_record(our_record: number) {
     show_record(our_record)
 }
@@ -67,25 +84,10 @@ function show_record(record: number) {
     basic.clearScreen()
 }
 
-// mode 4
-input.onLogoEvent(TouchButtonEvent.LongPressed, function on_logo_long_pressed() {
-    radio.setGroup(1)
-    radio.sendNumber(my_tree_record)
-    basic.showLeds(`
-                . . . . .
-                # # # # #
-                # # . # #
-                # . # . #
-                # # # # #
-    `)
-    basic.pause(2000)
-    basic.clearScreen()
-})
 radio.onReceivedNumber(function on_received_number(receivedNumber: number) {
     let our_record = receivedNumber + my_tree_record
     show_our_record(our_record)
 })
-// mode 5
 function show_completed_challenge() {
     let i: number;
     let num_of_led = 5

@@ -144,7 +144,6 @@ def show_completed_challenge():
     if my_tree_record >= CHALL_8:
         led.plot(3, 0)
         pause(500)
-        soundExpression.spring.play_until_done()
         congrats_completed_all_challenges()
         congrats_completed_all_challenges()
         congrats_completed_all_challenges()

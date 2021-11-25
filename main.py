@@ -1,4 +1,5 @@
 #Varibles
+radio.set_group(1)
 steps = 0
 test = 0
 my_tree_record = 0

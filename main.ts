@@ -1,3 +1,4 @@
+// Varibles
 let steps = 0
 let test = 0
 let my_tree_record = 0
@@ -14,9 +15,12 @@ let CHALL_7 = 50
 let CHALL_8 = 100
 let days : number[] = []
 let navigation = ["Press Logo to save your record at the end of each day", "Press A to view the trees saved in 30 days", "Press B to view completed challenges", "Press A and B together to show the record of me and my friends"]
+// Modes
+// on start
 for (let option of navigation) {
     basic.showString(option)
 }
+// mode 1
 input.onGesture(Gesture.Shake, function on_gesture_shake() {
     
     steps += 1
@@ -27,9 +31,11 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function on_logo_pressed() {
     days.push(steps)
     steps = 0
 })
+// mode 3
 input.onPinPressed(TouchPin.P0, function on_pin_pressed_p0() {
     show_my_record()
 })
+// mode 4
 input.onPinPressed(TouchPin.P1, function on_pin_pressed_p1() {
     radio.setGroup(1)
     radio.sendNumber(my_tree_record)
@@ -43,13 +49,16 @@ input.onPinPressed(TouchPin.P1, function on_pin_pressed_p1() {
     basic.pause(2000)
     basic.clearScreen()
 })
+radio.onReceivedNumber(function on_received_number(receivedNumber: number) {
+    let our_record = receivedNumber + my_tree_record
+    show_our_record(our_record)
+})
+// mode 5
 input.onPinPressed(TouchPin.P2, function on_pin_pressed_p2() {
     show_completed_challenge()
 })
-function convert_steps() {
-    
-}
-
+// Functions
+// functions for converting steps/km to the number of trees 
 function convert_km_to_trees(kilometer: number): number {
     let total_co2 = kilometer * CO2_PER_KM
     let num_of_tree = CO2_PER_TREE / total_co2
@@ -62,9 +71,18 @@ function convert_steps_to_trees(): number {
 }
 
 function show_our_record(our_record: number) {
+    basic.showLeds(`
+                . . . . .
+                . # . # .
+                # # # # #
+                . # . # .
+                # . # . #
+        `)
+    basic.pause(1000)
     show_record(our_record)
 }
 
+// functions for showing records and challenges
 function show_my_record() {
     show_record(my_tree_record)
 }
@@ -84,10 +102,6 @@ function show_record(record: number) {
     basic.clearScreen()
 }
 
-radio.onReceivedNumber(function on_received_number(receivedNumber: number) {
-    let our_record = receivedNumber + my_tree_record
-    show_our_record(our_record)
-})
 function show_completed_challenge() {
     let i: number;
     let num_of_led = 5

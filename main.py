@@ -3,9 +3,9 @@ radio.set_group(1)
 steps = 0
 test = 0
 my_tree_record = 0
-STEP_PER_KM = 1390
-CO2_PER_KM = 0.083
-CO2_PER_TREE = 21
+KM_PER_STEP = 1390
+CO2_PER_KM = 83
+CO2_PER_TREE = 21000
 CHALL_1 = 1
 CHALL_2 = 2
 CHALL_3 = 3
@@ -73,14 +73,25 @@ input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
 
 #Functions
 #functions for converting steps/km to the number of trees 
-def convert_km_to_trees(kilometer: number):
-    total_co2 = kilometer * CO2_PER_KM
-    num_of_tree = CO2_PER_TREE / total_co2
-    return num_of_tree
+def convert_km_to_steps(kilometer):
+    num_of_steps = kilometer * KM_PER_STEP
+    return num_of_steps
+    
+def convert_steps_to_trees(num_of_steps):
+    km = num_of_steps / KM_PER_STEP
+    return convert_km_to_trees(Math.round(km))
 
-def convert_steps_to_trees():
-    km = steps / STEP_PER_KM
-    return convert_km_to_trees(km)
+def convert_km_to_trees(kilometer):
+    total_co2 = kilometer * CO2_PER_KM
+    num_of_tree = 0
+    if total_co2 >= CO2_PER_TREE :
+        num_of_tree = total_co2 / CO2_PER_TREE
+    return Math.round(num_of_tree)
+
+
+#functions for showing records and challenges
+def show_my_record():
+    show_record(my_tree_record)
 
 def show_our_record(our_record):
     basic.show_leds("""
@@ -92,10 +103,6 @@ def show_our_record(our_record):
         """)
     basic.pause(1000)
     show_record(our_record)
-
-#functions for showing records and challenges
-def show_my_record():
-    show_record(my_tree_record)
 
 def show_record(record):
     music.start_melody(music.built_in_melody(Melodies.RINGTONE), MelodyOptions.ONCE)

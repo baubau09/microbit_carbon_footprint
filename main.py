@@ -1,4 +1,14 @@
-#Varibles
+# RMIT University Vietnam
+# Course: COSC2500 Introduction to Computer Systems
+# Semester: 2021C
+# Assessment 2 - Microbit Project
+## Student: Tran Phuong Anh (s3914138)
+## Student: Lee Gain (s3878170)
+# Project description: To encourage people to reduce their carbon footprint by walking or using public transportation
+# Created date: 27/11/2021
+# Last modified date: 03/12/2021
+
+# Variables
 radio.set_group(1)
 days = 0
 current_steps = 0
@@ -17,31 +27,37 @@ CHALL_7 = 25
 CHALL_8 = 50
 YEAR = 365
 
-#on start
+### INSTRUCTIONS ###
+# Press logo to save current steps records
+# Press pin 0 to show my tree records 
+# Press pin 1 to show me and my friends records
+# Press pin 2 to show my completed challenges
+
+# On start
 show_intro()
 if my_steps_record == 0 :
     show_menu()
 
-#Modes
-#mode 1
-# Hello Katie, I modified both two functions below, 
-# I put music and icons and change only Variables name.
-# I believe the algorithm is the same as yours.
-# This is just an example, so if you don't like it, feel free to modify 
-# or delete it! Please delete my comments. Thank you. 
+# Gesture detection to count current steps
 def on_gesture_shake():
     global current_steps
     current_steps += 1
     basic.show_icon(IconNames.EIGTH_NOTE)
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
+
+### MODES ###
+# mode 1: Save steps data to convert and store trees data
 def on_logo_pressed():
     global my_steps_record
     global my_tree_record
     global current_steps
-    basic.show_icon(IconNames.YES)
-    my_steps_record += current_steps
-    current_steps = 0
+    global days
+
+    basic.show_icon(IconNames.YES) # A checked icon is shown
+    my_steps_record += current_steps # Add current steps to the records
+    current_steps = 0 # Reset current steps
+    # Convert steps to trees then save to records
     my_tree_record = convert_steps_to_trees(my_steps_record)
     basic.clear_screen()
     
@@ -56,12 +72,14 @@ def on_logo_pressed():
     basic.clear_screen()
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
-#mode 3
+# mode 3: Show accumulated tree records
 def on_pin_pressed_p0():
     show_my_record()
 input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
 
-#mode 4
+# mode 4: Friends mode 
+
+# 4.1 Send my tree record to my friend's microbit
 def on_pin_pressed_p1():
     radio.set_group(1)
     radio.send_number(my_tree_record)
@@ -76,19 +94,21 @@ def on_pin_pressed_p1():
     basic.clear_screen()
 input.on_pin_pressed(TouchPin.P1, on_pin_pressed_p1)
 
+# 4.2 Calculate the total tree records of me and my friend 
 def on_received_number(receivedNumber):
     global my_tree_record
     our_record = receivedNumber + my_tree_record
     show_our_record(our_record)
 radio.on_received_number(on_received_number)
 
-#mode 5
+# mode 5: Show my completed challenges
 def on_pin_pressed_p2():
     show_completed_challenge()
 input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
 
-#Functions
-#basic functions 
+
+### UTILITY FUCTIONS ###
+# Sound and image effects
 def play_effect_sound_dingdong():
     music.play_tone(523, music.beat(BeatFraction.QUARTER))
     music.play_tone(659, music.beat(BeatFraction.QUARTER))
@@ -104,13 +124,14 @@ def congrats_completed_all_challenges():
     basic.clear_screen()
     pause(100)
 
+# Reset data
 def reset_all_data():
     global my_steps_record
     global my_tree_record
     my_steps_record = 0
     my_tree_record = 0
 
-#functions for converting steps/km to the number of trees
+# Functions for converting steps/km to the number of trees
 def convert_km_to_steps(kilometer):
     num_of_steps = kilometer * KM_PER_STEP
     return num_of_steps
@@ -126,7 +147,7 @@ def convert_km_to_trees(kilometer):
         num_of_tree = total_co2 / CO2_PER_TREE
     return Math.round(num_of_tree)
 
-#functions for showing intro, menu, records and challenges
+# Functions for showing intro, menu, records and challenges
 def show_intro():
     music.start_melody(music.built_in_melody(Melodies.CHASE),
             MelodyOptions.FOREVER_IN_BACKGROUND)

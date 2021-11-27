@@ -1,7 +1,7 @@
 #Varibles
 radio.set_group(1)
 steps = 0
-test = 0
+days = 0
 my_tree_record = 0
 KM_PER_STEP = 1390
 CO2_PER_KM = 83
@@ -14,7 +14,6 @@ CHALL_5 = 5
 CHALL_6 = 10
 CHALL_7 = 50
 CHALL_8 = 100
-days: List[number] = []
 navigation: List[string] = [
     'Press Logo to save your record at the end of each day',
     'Press A to view the trees saved in 30 days',
@@ -30,15 +29,19 @@ for option in navigation:
 #mode 1
 def on_gesture_shake():
     global steps
-    steps += 1
+    steps = steps + 1
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
 def on_logo_pressed():
     global days
     global steps
-    days.append(steps)
-    steps = 0
-
+    
+    # if a year has passed, reset data
+    if days == 365:
+        steps = 0
+        days = 0
+    else:
+        days = days + 1
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
 #mode 3

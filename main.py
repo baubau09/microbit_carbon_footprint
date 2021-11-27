@@ -1,13 +1,8 @@
 #Varibles
 radio.set_group(1)
-<<<<<<< Updated upstream
-steps = 0
-test = 0
-=======
 days = 0
 current_steps = 0
 my_steps_record = 0
->>>>>>> Stashed changes
 my_tree_record = 0
 KM_PER_STEP = 1390
 CO2_PER_KM = 83
@@ -18,21 +13,9 @@ CHALL_3 = 3
 CHALL_4 = 4
 CHALL_5 = 5
 CHALL_6 = 10
-<<<<<<< Updated upstream
-CHALL_7 = 50
-CHALL_8 = 100
-days: List[number] = []
-navigation: List[string] = [
-    'Press Logo to save your record at the end of each day',
-    'Press A to view the trees saved in 30 days',
-    'Press B to view completed challenges',
-    'Press A and B together to show the record of me and my friends'
-]
-=======
 CHALL_7 = 25
 CHALL_8 = 50
 YEAR = 365
->>>>>>> Stashed changes
 
 #on start
 show_intro()
@@ -42,23 +25,11 @@ if my_steps_record == 0 :
 #Modes
 #mode 1
 # Hello Katie, I modified both two functions below, 
-# I put music and icon and change only Varibles name.
-# I belive the algorithm is the same of yours.
-# This is just an example so if you don't like it, feel free to modify 
+# I put music and icons and change only Variables name.
+# I believe the algorithm is the same as yours.
+# This is just an example, so if you don't like it, feel free to modify 
 # or delete it! Please delete my comments. Thank you. 
 def on_gesture_shake():
-<<<<<<< Updated upstream
-    global steps
-    steps += 1
-input.on_gesture(Gesture.SHAKE, on_gesture_shake)
-
-def on_logo_pressed():
-    global days
-    global steps
-    days.append(steps)
-    steps = 0
-
-=======
     global current_steps
     current_steps += 1
     basic.show_icon(IconNames.EIGTH_NOTE)
@@ -72,7 +43,8 @@ def on_logo_pressed():
     my_steps_record += current_steps
     current_steps = 0
     my_tree_record = convert_steps_to_trees(my_steps_record)
-
+    basic.clear_screen()
+    
     #if a year has passed, reset data
     if days == YEAR :
         my_steps_record = 0
@@ -80,8 +52,8 @@ def on_logo_pressed():
         days = 0
     else:
         days += 1    
+        
     basic.clear_screen()
->>>>>>> Stashed changes
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
 
 #mode 3

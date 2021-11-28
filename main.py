@@ -93,7 +93,12 @@ input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
 # 4.1 Send my tree record to my friend's microbit
 def on_pin_pressed_p1():
     radio.set_group(1)
+<<<<<<< Updated upstream
     radio.send_number(my_tree_record)
+=======
+    radio.send_number(my_tree_record) # Send my record to my friend's microbit
+    play_sound_effects_dingdong()
+>>>>>>> Stashed changes
     basic.show_leds("""
                     . . . . .
                     # # # # #
@@ -121,6 +126,11 @@ input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
 
 
 ### UTILITY FUCTIONS ###
+# sound effects 
+def play_sound_effects_dingdong():
+    music.play_tone(784, music.beat(BeatFraction.QUARTER))
+    music.play_tone(659, music.beat(BeatFraction.QUARTER))
+
 # image effects
 def congrats_completed_all_challenges():
     basic.show_icon(IconNames.HEART)

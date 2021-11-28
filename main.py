@@ -13,7 +13,7 @@ radio.set_group(1)
 days = 0
 current_steps = 0
 my_steps_record = 0
-my_tree_record = 50
+my_tree_record = 0
 KM_PER_STEP = 1390 #On average, there are 1390 steps in a kilometer
 CO2_PER_KM = 83 #A small motorbike's CO2 emission is approximately 83g.
 CO2_PER_TREE = 21000 # A tree can absorb 21000g of CO2 
@@ -93,7 +93,8 @@ input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
 # 4.1 Send my tree record to my friend's microbit
 def on_pin_pressed_p1():
     radio.set_group(1)
-    radio.send_number(my_tree_record)
+    radio.send_number(my_tree_record) # Send my record to my friend's microbit
+    music.start_melody(music.built_in_melody(Melodies.BA_DING), MelodyOptions.ONCE)
     basic.show_leds("""
                     . . . . .
                     # # # # #
@@ -259,7 +260,7 @@ def show_menu():
     basic.clear_screen()
 
 # Functions for showing my accumulated saved trees record 
-# and me and my friend's accumulated saved trees record.
+# and me and my friend's accumulated saved trees record
 def show_my_record():
     show_record(my_tree_record)
 

@@ -87,6 +87,7 @@ def on_pin_pressed_p0():
     show_my_record()
 input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
 
+
 # mode 4: Friends mode
 
 # 4.1 Send my tree record to my friend's microbit
@@ -103,6 +104,7 @@ def on_pin_pressed_p1():
     basic.pause(2000)
     basic.clear_screen()
 input.on_pin_pressed(TouchPin.P1, on_pin_pressed_p1)
+
 
 # 4.2 Calculate the total tree records of me and my friend
 def on_received_number(receivedNumber):

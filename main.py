@@ -1,13 +1,3 @@
-# RMIT University Vietnam
-# Course: COSC2500 Introduction to Computer Systems
-# Semester: 2021C
-# Assessment 2 - Microbit Project
-## Student: Tran Phuong Anh (s3914138)
-## Student: Lee Gain (s3878170)
-# Project description: To encourage people to reduce their carbon footprint by walking or using public transportation
-# Created date: 27/11/2021
-# Last modified date: 03/12/2021
-
 # Variables
 radio.set_group(1)
 days = 1
@@ -249,7 +239,7 @@ def convert_km_to_trees(kilometer):
 def show_intro():
     music.start_melody(music.built_in_melody(Melodies.CHASE),
             MelodyOptions.FOREVER_IN_BACKGROUND)
-    basic.show_string("Save Earth!")
+    basic.show_string("Hi")
     music.stop_all_sounds()
     basic.show_icon(IconNames.HAPPY)
     basic.clear_screen()

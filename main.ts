@@ -1,25 +1,16 @@
-//  RMIT University Vietnam
-//  Course: COSC2500 Introduction to Computer Systems
-//  Semester: 2021C
-//  Assessment 2 - Microbit Project
-// # Student: Tran Phuong Anh (s3914138)
-// # Student: Lee Gain (s3878170)
-//  Project description: To encourage people to reduce their carbon footprint by walking or using public transportation
-//  Created date: 27/11/2021
-//  Last modified date: 03/12/2021
 //  Variables
 radio.setGroup(1)
-let days = 0
+let days = 1
 let km_input = 0
 let current_steps = 0
 let my_steps_record = 0
 let my_tree_record = 0
 let KM_PER_STEP = 1390
-// On average, there are 1390 steps in a kilometer
+// O n average, there are 1390 steps in a kilometer
 let CO2_PER_KM = 83
-// A small motorbike's CO2 emission is approximately 83g.
+//  A small motorbike's CO2 emission is approximately 83g
 let CO2_PER_TREE = 21000
-//  A tree can absorb 21000g of CO2 
+//  A tree can absorb 21000g of CO2
 let YEAR = 365
 //  Variables for challenges
 //  Each challenge refers to a specific number of trees.
@@ -50,32 +41,20 @@ if (my_steps_record == 0) {
     show_menu()
 }
 
+// ## MODES ###
+//  mode 1: Save steps data to convert and store trees data
 //  Gesture detection to count current steps
 input.onGesture(Gesture.Shake, function on_gesture_shake() {
     
     current_steps += 1
     basic.showIcon(IconNames.EigthNote)
 })
-// ## MODES ###
-//  mode 1: Save steps data to convert and store trees data
 input.onLogoEvent(TouchButtonEvent.Pressed, function on_logo_pressed() {
     
     
-    
-    
-    //  Play effect sound to notify a microbit is attempting to save data
-    music.startMelody(music.builtInMelody(Melodies.BaDing), MelodyOptions.Once)
-    basic.showIcon(IconNames.Yes)
-    //  A checked icon is shown
-    my_steps_record += current_steps
-    //  Add current steps to the records
-    current_steps = 0
-    //  Reset current steps
-    //  Convert steps to trees then save to records
-    my_tree_record = convert_steps_to_trees(my_steps_record)
-    basic.clearScreen()
+    save_my_data(true)
     // if a year has passed, reset data
-    if (days == YEAR) {
+    if (days >= YEAR) {
         reset_all_data()
     } else {
         days += 1
@@ -89,6 +68,7 @@ input.onButtonPressed(Button.A, function on_button_pressed_a() {
     
     if (km_input == 0) {
         basic.showIcon(IconNames.No)
+        play_sound_effects_fail()
         pause(500)
         basic.clearScreen()
     } else {
@@ -105,12 +85,7 @@ input.onButtonPressed(Button.B, function on_button_pressed_b() {
 })
 //  Press A and B together to save km record
 input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
-    
-    
-    current_steps += convert_km_to_steps(km_input)
-    basic.showIcon(IconNames.Yes)
-    pause(500)
-    basic.clearScreen()
+    save_my_data(false)
 })
 //  mode 3: Show accumulated tree records
 input.onPinPressed(TouchPin.P0, function on_pin_pressed_p0() {
@@ -144,10 +119,17 @@ input.onPinPressed(TouchPin.P2, function on_pin_pressed_p2() {
     show_completed_challenge()
 })
 // ## UTILITY FUCTIONS ###
-//  sound effects 
+//  sound effects
 function play_sound_effects_dingdong() {
     music.playTone(784, music.beat(BeatFraction.Quarter))
     music.playTone(659, music.beat(BeatFraction.Quarter))
+}
+
+function play_sound_effects_fail() {
+    music.playTone(698, music.beat(BeatFraction.Half))
+    music.playTone(659, music.beat(BeatFraction.Half))
+    music.playTone(622, music.beat(BeatFraction.Half))
+    music.playTone(587, music.beat(BeatFraction.Half))
 }
 
 //  image effects
@@ -174,6 +156,34 @@ function notify_reset_data() {
     basic.clearScreen()
     led.plot(2, 2)
     pause(500)
+}
+
+//  Save Data
+function save_my_data(is_logo_pressed: boolean) {
+    
+    
+    
+    
+    //  Play effect sound to notify a microbit is attempting to save data
+    music.startMelody(music.builtInMelody(Melodies.BaDing), MelodyOptions.Once)
+    basic.showIcon(IconNames.Yes)
+    //  A checked icon is shown
+    if (is_logo_pressed) {
+        //  Convert steps to trees then save to records
+        my_steps_record += current_steps
+        //  Add current steps to the records
+        current_steps = 0
+    } else {
+        //  Reset current steps
+        //  Convert km to trees then save to records
+        my_steps_record += convert_km_to_steps(km_input)
+        //  Add current km to the records
+        km_input = 0
+    }
+    
+    //  Reset km input
+    my_tree_record = convert_steps_to_trees(my_steps_record)
+    basic.clearScreen()
 }
 
 //  Reset data
@@ -221,26 +231,46 @@ function convert_km_to_trees(kilometer: number): number {
 //  Functions for showing intro and menu
 function show_intro() {
     music.startMelody(music.builtInMelody(Melodies.Chase), MelodyOptions.ForeverInBackground)
-    basic.showString("Save Earth!")
+    basic.showString("Hi")
     music.stopAllSounds()
     basic.showIcon(IconNames.Happy)
     basic.clearScreen()
 }
 
 function show_menu() {
-    //  Play 'Do' and show button and a representative icon for mode 1 
+    //  Play 'Do' and show button and a representative icon for mode 1
     music.playTone(262, music.beat(BeatFraction.Whole))
-    basic.showString("p0")
+    basic.showString("shake")
     basic.showIcon(IconNames.EigthNote)
+    basic.clearScreen()
+    pause(500)
+    basic.showIcon(IconNames.Yes)
+    pause(1000)
+    basic.showLeds(`
+                    . . . . .
+                    . # # # .
+                    # # . # #
+                    # . . . #
+                    . # # # .
+                    `)
+    pause(1000)
     basic.clearScreen()
     //  Play 'Re' and show button and a representative icon for mode 2
     music.playTone(294, music.beat(BeatFraction.Whole))
-    basic.showString("p0")
-    // mode 2
-    basic.showArrow(ArrowNames.North)
-    basic.showArrow(ArrowNames.South)
-    basic.clearScreen()
     basic.showString("KM")
+    basic.clearScreen()
+    pause(500)
+    basic.showString("A")
+    basic.showArrow(ArrowNames.North)
+    pause(500)
+    basic.showString("B")
+    basic.showArrow(ArrowNames.South)
+    pause(500)
+    basic.showIcon(IconNames.Yes)
+    pause(1000)
+    basic.clearScreen()
+    basic.showString("A + B")
+    pause(1000)
     basic.clearScreen()
     //  Play 'Mi' and show button and a representative icon for mode 3
     music.playTone(330, music.beat(BeatFraction.Whole))
@@ -282,14 +312,14 @@ function show_menu() {
                     . . # . .
                     `)
     basic.clearScreen()
-    //  Play effect sound and show button and representative icon 
+    //  Play effect sound and show button and representative icon
     //  to notify the end of the instructions
     music.startMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once)
     notify_menu_end()
     basic.clearScreen()
 }
 
-//  Functions for showing my accumulated saved trees record 
+//  Functions for showing my accumulated saved trees record
 //  and me and my friend's accumulated saved trees record
 function show_my_record() {
     show_record(my_tree_record)
@@ -317,6 +347,7 @@ function show_record(record: number) {
                     . . # . .
                     `)
     basic.pause(1000)
+    basic.clearScreen()
     basic.showNumber(record)
     basic.pause(2000)
     basic.clearScreen()

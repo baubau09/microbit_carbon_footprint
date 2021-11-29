@@ -10,14 +10,14 @@
 
 # Variables
 radio.set_group(1)
-days = 0
+days = 1
 km_input = 0
 current_steps = 0
 my_steps_record = 0
 my_tree_record = 0
-KM_PER_STEP = 1390 #On average, there are 1390 steps in a kilometer
-CO2_PER_KM = 83 #A small motorbike's CO2 emission is approximately 83g.
-CO2_PER_TREE = 21000 # A tree can absorb 21000g of CO2 
+KM_PER_STEP = 1390 #O n average, there are 1390 steps in a kilometer
+CO2_PER_KM = 83 # A small motorbike's CO2 emission is approximately 83g
+CO2_PER_TREE = 21000 # A tree can absorb 21000g of CO2
 YEAR = 365
 
 # Variables for challenges
@@ -53,6 +53,8 @@ show_intro()
 if my_steps_record == 0 :
     show_menu()
 
+### MODES ###
+# mode 1: Save steps data to convert and store trees data
 # Gesture detection to count current steps
 def on_gesture_shake():
     global current_steps
@@ -60,26 +62,13 @@ def on_gesture_shake():
     basic.show_icon(IconNames.EIGTH_NOTE)
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
-
-### MODES ###
-# mode 1: Save steps data to convert and store trees data
 def on_logo_pressed():
-    global my_steps_record
-    global my_tree_record
-    global current_steps
     global days
+    global YEAR
 
-    # Play effect sound to notify a microbit is attempting to save data
-    music.start_melody(music.built_in_melody(Melodies.BA_DING), MelodyOptions.ONCE) 
-    basic.show_icon(IconNames.YES) # A checked icon is shown
-    my_steps_record += current_steps # Add current steps to the records
-    current_steps = 0 # Reset current steps
-    # Convert steps to trees then save to records
-    my_tree_record = convert_steps_to_trees(my_steps_record)
-    basic.clear_screen()
-    
+    save_my_data(True)  
     #if a year has passed, reset data
-    if days == YEAR :
+    if days >= YEAR :
         reset_all_data()
     else:
         days += 1
@@ -95,6 +84,7 @@ def on_button_pressed_a():
 
     if km_input == 0:
         basic.show_icon(IconNames.No)
+        play_sound_effects_fail()
         pause(500)
         basic.clear_screen()
     else:
@@ -106,19 +96,15 @@ input.on_button_pressed(Button.A, on_button_pressed_a)
 # Press B to increase km by 1
 def on_button_pressed_b():
     global km_input
+    
     km_input += 1
     basic.show_number(km_input)
+    
 input.on_button_pressed(Button.B, on_button_pressed_b)
 
 # Press A and B together to save km record
 def on_button_pressed_ab():
-    global current_steps
-    global km_input
-    
-    current_steps += convert_km_to_steps(km_input)
-    basic.show_icon(IconNames.YES)
-    pause(500)
-    basic.clear_screen()
+    save_my_data(False)
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
 
@@ -162,10 +148,16 @@ input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
 
 
 ### UTILITY FUCTIONS ###
-# sound effects 
+# sound effects
 def play_sound_effects_dingdong():
     music.play_tone(784, music.beat(BeatFraction.QUARTER))
     music.play_tone(659, music.beat(BeatFraction.QUARTER))
+
+def play_sound_effects_fail():
+    music.play_tone(698, music.beat(BeatFraction.HALF))
+    music.play_tone(659, music.beat(BeatFraction.HALF))
+    music.play_tone(622, music.beat(BeatFraction.HALF))
+    music.play_tone(587, music.beat(BeatFraction.HALF))
 
 # image effects
 def congrats_completed_all_challenges():
@@ -189,6 +181,29 @@ def notify_reset_data():
     basic.clear_screen()
     led.plot(2, 2)
     pause(500)
+
+# Save Data
+def save_my_data(is_logo_pressed):
+    global my_steps_record
+    global my_tree_record
+    global current_steps
+    global km_input
+
+    # Play effect sound to notify a microbit is attempting to save data
+    music.start_melody(music.built_in_melody(Melodies.BA_DING), MelodyOptions.ONCE)
+    basic.show_icon(IconNames.YES) # A checked icon is shown
+    
+    if is_logo_pressed:
+        # Convert steps to trees then save to records
+        my_steps_record += current_steps # Add current steps to the records
+        current_steps = 0 # Reset current steps
+    else:
+        # Convert km to trees then save to records
+        my_steps_record += convert_km_to_steps(km_input) # Add current km to the records
+        km_input = 0 # Reset km input
+
+    my_tree_record = convert_steps_to_trees(my_steps_record)
+    basic.clear_screen()
 
 # Reset data
 def reset_all_data():
@@ -240,19 +255,40 @@ def show_intro():
     basic.clear_screen()
 
 def show_menu():
-    # Play 'Do' and show button and a representative icon for mode 1 
+    # Play 'Do' and show button and a representative icon for mode 1
     music.play_tone(262, music.beat(BeatFraction.WHOLE))
-    basic.show_string("p0") 
+    basic.show_string("shake")
     basic.show_icon(IconNames.EIGTH_NOTE)
+    basic.clear_screen()
+    pause(500)
+    basic.show_icon(IconNames.YES)
+    pause(1000)
+    basic.show_leds("""
+                    . . . . .
+                    . # # # .
+                    # # . # #
+                    # . . . #
+                    . # # # .
+                    """)
+    pause(1000)
     basic.clear_screen()
 
     # Play 'Re' and show button and a representative icon for mode 2
     music.play_tone(294, music.beat(BeatFraction.WHOLE))
-    basic.show_string("p0") #mode 2
-    basic.show_arrow(ArrowNames.NORTH)
-    basic.show_arrow(ArrowNames.SOUTH)
-    basic.clear_screen()
     basic.show_string("KM")
+    basic.clear_screen()
+    pause(500)
+    basic.show_string("A") 
+    basic.show_arrow(ArrowNames.NORTH)
+    pause(500)
+    basic.show_string("B")
+    basic.show_arrow(ArrowNames.SOUTH)
+    pause(500)
+    basic.show_icon(IconNames.YES)
+    pause(1000)
+    basic.clear_screen()
+    basic.show_string("A + B")
+    pause(1000)
     basic.clear_screen()
 
     # Play 'Mi' and show button and a representative icon for mode 3
@@ -298,13 +334,13 @@ def show_menu():
                     """)
     basic.clear_screen()
 
-    # Play effect sound and show button and representative icon 
+    # Play effect sound and show button and representative icon
     # to notify the end of the instructions
     music.start_melody(music.built_in_melody(Melodies.JUMP_UP), MelodyOptions.ONCE)
     notify_menu_end()
     basic.clear_screen()
 
-# Functions for showing my accumulated saved trees record 
+# Functions for showing my accumulated saved trees record
 # and me and my friend's accumulated saved trees record
 def show_my_record():
     show_record(my_tree_record)
@@ -330,6 +366,7 @@ def show_record(record):
                     . . # . .
                     """)
     basic.pause(1000)
+    basic.clear_screen()
     basic.show_number(record)
     basic.pause(2000)
     basic.clear_screen()

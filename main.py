@@ -11,6 +11,7 @@
 # Variables
 radio.set_group(1)
 days = 0
+km_input = 0
 current_steps = 0
 my_steps_record = 0
 my_tree_record = 0
@@ -36,6 +37,10 @@ CHALL_8 = 50
 # Press pin 0 to show my tree records
 # Press pin 1 to show me and my friends records
 # Press pin 2 to show my completed challenges
+# A and B buttons are used to manually enter the KM travelled
+#   Press A to decrease km by 1
+#   Press B to increase km by 1
+#   Press A and B together to save km record
 
 ### RESET DATA ###
 # Data will be automatically reset
@@ -81,6 +86,39 @@ def on_logo_pressed():
         
     basic.clear_screen()
 input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
+
+# mode 2: User manually input kilometer travelled in case they use Public transportation
+
+# Press A to decrease km by 1
+def on_button_pressed_a():
+    global km_input
+
+    if km_input == 0:
+        basic.show_icon(IconNames.No)
+        pause(500)
+        basic.clear_screen()
+    else:
+        km_input -= 1
+        basic.show_number(km_input)
+    
+input.on_button_pressed(Button.A, on_button_pressed_a)
+
+# Press B to increase km by 1
+def on_button_pressed_b():
+    global km_input
+    km_input += 1
+    basic.show_number(km_input)
+input.on_button_pressed(Button.B, on_button_pressed_b)
+
+# Press A and B together to save km record
+def on_button_pressed_ab():
+    global current_steps
+    current_steps += convert_km_to_steps(km_input)
+    basic.show_icon(IconNames.YES)
+    pause(500)
+    basic.clear_screen()
+input.on_button_pressed(Button.AB, on_button_pressed_ab)
+
 
 # mode 3: Show accumulated tree records
 def on_pin_pressed_p0():

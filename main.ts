@@ -106,6 +106,7 @@ input.onButtonPressed(Button.B, function on_button_pressed_b() {
 //  Press A and B together to save km record
 input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     
+    
     current_steps += convert_km_to_steps(km_input)
     basic.showIcon(IconNames.Yes)
     pause(500)

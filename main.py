@@ -113,6 +113,8 @@ input.on_button_pressed(Button.B, on_button_pressed_b)
 # Press A and B together to save km record
 def on_button_pressed_ab():
     global current_steps
+    global km_input
+    
     current_steps += convert_km_to_steps(km_input)
     basic.show_icon(IconNames.YES)
     pause(500)

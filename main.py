@@ -56,7 +56,7 @@ def on_logo_pressed():
     global days
     global YEAR
 
-    save_my_data(True)  
+    save_my_data(True)
     #if a year has passed, reset data
     if days >= YEAR :
         reset_all_data()
@@ -74,7 +74,6 @@ def on_button_pressed_a():
 
     if km_input == 0:
         basic.show_icon(IconNames.No)
-        play_sound_effects_fail()
         pause(500)
         basic.clear_screen()
     else:
@@ -110,7 +109,6 @@ input.on_pin_pressed(TouchPin.P0, on_pin_pressed_p0)
 def on_pin_pressed_p1():
     radio.set_group(1)
     radio.send_number(my_tree_record) # Send my record to my friend's microbit
-    play_sound_effects_dingdong()
     basic.show_leds("""
                     . . . . .
                     # # # # #
@@ -138,39 +136,6 @@ input.on_pin_pressed(TouchPin.P2, on_pin_pressed_p2)
 
 
 ### UTILITY FUCTIONS ###
-# sound effects
-def play_sound_effects_dingdong():
-    music.play_tone(784, music.beat(BeatFraction.QUARTER))
-    music.play_tone(659, music.beat(BeatFraction.QUARTER))
-
-def play_sound_effects_fail():
-    music.play_tone(698, music.beat(BeatFraction.HALF))
-    music.play_tone(659, music.beat(BeatFraction.HALF))
-    music.play_tone(622, music.beat(BeatFraction.HALF))
-    music.play_tone(587, music.beat(BeatFraction.HALF))
-
-# image effects
-def congrats_completed_all_challenges():
-    basic.show_icon(IconNames.HEART)
-    pause(100)
-    basic.clear_screen()
-    pause(100)
-
-def notify_menu_end():
-    led.plot(2, 2)
-    pause(500)
-    basic.clear_screen()
-    basic.show_icon(IconNames.SMALL_DIAMOND)
-    basic.show_icon(IconNames.TARGET)
-    basic.show_icon(IconNames.DIAMOND)
-
-def notify_reset_data():
-    basic.show_icon(IconNames.DIAMOND)
-    basic.show_icon(IconNames.TARGET)
-    basic.show_icon(IconNames.SMALL_DIAMOND)
-    basic.clear_screen()
-    led.plot(2, 2)
-    pause(500)
 
 # Save Data
 def save_my_data(is_logo_pressed):
@@ -203,11 +168,9 @@ def reset_all_data():
     global my_tree_record
     global days
 
-    music.start_melody(music.built_in_melody(Melodies.FUNK), MelodyOptions.ONCE)
     my_steps_record = 0
     my_tree_record = 0
     days = 0
-    notify_reset_data()
     basic.clear_screen()
 
 # Functions for converting steps/km to the number of trees
@@ -268,7 +231,7 @@ def show_menu():
     basic.show_string("KM")
     basic.clear_screen()
     pause(500)
-    basic.show_string("A") 
+    basic.show_string("A")
     basic.show_arrow(ArrowNames.NORTH)
     pause(500)
     basic.show_string("B")
@@ -322,12 +285,6 @@ def show_menu():
                     . # . # .
                     . . # . .
                     """)
-    basic.clear_screen()
-
-    # Play effect sound and show button and representative icon
-    # to notify the end of the instructions
-    music.start_melody(music.built_in_melody(Melodies.JUMP_UP), MelodyOptions.ONCE)
-    notify_menu_end()
     basic.clear_screen()
 
 # Functions for showing my accumulated saved trees record
@@ -417,9 +374,5 @@ def show_completed_challenge():
     if my_tree_record >= CHALL_8:
         led.plot(3, 0)
         pause(500)
-        music.start_melody(music.built_in_melody(Melodies.BA_DING), MelodyOptions.ONCE)
-        congrats_completed_all_challenges()
-        congrats_completed_all_challenges()
-        congrats_completed_all_challenges()
         reset_all_data()
     basic.clear_screen()
